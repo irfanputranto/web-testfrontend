@@ -14,6 +14,7 @@ const toast = useToast();
 const articleStore = useArticleStore();
 const userStore = useAuthStore();
 const router = useRouter();
+const isSave = ref(false);
 
 const handleFileChange = (event: Event) => {
     const input = event.target as HTMLInputElement;
@@ -24,9 +25,10 @@ const handleFileChange = (event: Event) => {
 };
 
 const submit = async () => {
+    isSave.value = true;
     try {
         await userStore.checkUser();
-    const userId = userStore.userData;
+        const userId = userStore.userData;
 
     if (title.value && content.value && image.value) {
        await articleStore.store(title.value, content.value, image.value, userId.id);
@@ -40,6 +42,7 @@ const submit = async () => {
     }
 } catch (error: any) {
     if (error.response.status === 400) {
+        isSave.value = false;
         toast.error(error.response.data.message.image[0], {
             timeout: 3000
         });
@@ -85,7 +88,7 @@ const submit = async () => {
                     </div>
                 </div>
 
-                <ButtonVue type="submit">Save</ButtonVue>
+                <ButtonVue type="submit" :disabled="isSave">Save</ButtonVue>
             </div>
         </form>
 </div></template>

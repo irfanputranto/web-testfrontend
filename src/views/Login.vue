@@ -3,19 +3,26 @@ import ButtonVue from '../components/Button.vue';
 import { ref } from "vue";
 import { useAuthStore } from '../store/auth';
 import { useRouter } from 'vue-router';
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
 const email = ref('');
 const password = ref('');
 const error = ref('');
+const toast = useToast();
 
 const authStore = useAuthStore();
 const login = async () => {
     try {
         await authStore.login(email.value, password.value);
-
+        toast.success("Login is successfully", {
+            timeout: 2000
+        });
         router.push({ name: 'article' });
     } catch (err) {
+        toast.error("Invalid email or password", {
+            timeout: 2000
+        });
         error.value = 'Invalid email or password';
     }
 }
