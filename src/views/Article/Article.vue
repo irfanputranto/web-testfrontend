@@ -29,20 +29,23 @@ const submit = async () => {
     const userId = userStore.userData;
 
     if (title.value && content.value && image.value) {
-        await articleStore.store(title.value, content.value, image.value, userId.id);
+       await articleStore.store(title.value, content.value, image.value, userId.id);
         title.value = '';
         content.value = '';
         image.value = null;
-    }
-    } catch (err) {
-        console.log(err);
-    } finally {
         toast.success("Data add successfully", {
         timeout: 2000
       });
-        router.push({name: 'home'});
+      router.push({name: 'home'});
     }
-    
+} catch (error: any) {
+    if (error.response.status === 400) {
+        toast.error(error.response.data.message.image[0], {
+            timeout: 3000
+        });
+    }
+    router.push({name: 'article'});
+    } 
 }
 
 </script>

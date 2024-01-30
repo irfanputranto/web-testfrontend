@@ -13,9 +13,6 @@ export const articleService = {
             if (params.title) {
                 queryParams.title = params.title;
             }
-            // if (params.alias) {
-            //     queryParams.alias = params.alias;
-            // }
 
             const res = await axios.get(`${BASE_URL}/api/article`, {
                 params: queryParams,
@@ -23,8 +20,8 @@ export const articleService = {
 
             const data = res.data;
             return data;
-        } catch (error) {
-            throw new Error('Error : ' + error);
+        } catch (err) {
+            throw new Error('Error : ' + err);
         }
     },
     async store(title: string, content: string, image: File, userId: string): Promise<void> {
@@ -42,7 +39,7 @@ export const articleService = {
                 }
             });
         } catch (error) {
-            throw new Error('Error : ' + error);
+            throw error;
         }
 
     }

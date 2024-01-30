@@ -42,7 +42,7 @@ export const useArticleStore = defineStore({
             try {
                 await articleService.store(title, content, image, userId);
             } catch (err) {
-                console.log('error store article', err);
+                throw err;
             } finally {
                 this.isLoading = false;
             }
