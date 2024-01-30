@@ -1,10 +1,8 @@
 import axios from "axios";
 import { useToast } from "vue-toastification";
-import { useRouter } from 'vue-router';
 
 const BASE_URL = import.meta.env.VITE_APP_API_BACKEND;
 const toast = useToast();
-const router = useRouter();
 
 export const authService = {
     async login(email: string, password: string): Promise<string> {
@@ -53,7 +51,6 @@ export const authService = {
                     localStorage.removeItem('token');
                     setTimeout(() => {
                         window.location.href = '/';
-                        // router.push({ name: 'home' });
                     }, 6000);
                 }
             }
