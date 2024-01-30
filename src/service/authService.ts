@@ -1,6 +1,8 @@
 import axios from "axios";
+import { useToast } from "vue-toastification";
 
 const BASE_URL = import.meta.env.VITE_APP_API_BACKEND;
+const toast = useToast();
 
 export const authService = {
     async login(email: string, password: string): Promise<string> {
@@ -40,7 +42,19 @@ export const authService = {
             });
             const data = res.data.user;
             return data;
-        } catch (error) {
+        } catch (error: any) {
+            if (error) {
+                if (error.response.data.message === "Token has expired") {
+                    toast.error("Token has expired", {
+                        timeout: 5000
+                    });
+                    localStorage.removeItem('token');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 6000);
+                }
+            }
+
             throw new Error('Invalid credentials');
         }
     }

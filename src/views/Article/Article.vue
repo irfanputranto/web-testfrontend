@@ -41,6 +41,10 @@ const submit = async () => {
       router.push({name: 'home'});
     }
 } catch (error: any) {
+    if (error === 'Error: Invalid credentials') {
+        console.log(error);
+    }
+    
     if (error.response.status === 400) {
         isSave.value = false;
         toast.error(error.response.data.message.image[0], {
