@@ -26,7 +26,7 @@ const handleFileChange = (event: Event) => {
 };
 
 const handleVideoChange = (event: Event) => {
-    const input = event.target as  HTMLInputElement;
+    const input = event.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {
         video.value = input.files[0];
@@ -40,31 +40,48 @@ const submit = async () => {
         await userStore.checkUser();
         const userId = userStore.userData;
 
-    if (title.value && content.value && image.value && video.value) {
-       await articleStore.store(title.value, content.value, image.value, userId.id, video.value);
-        title.value = '';
-        content.value = '';
-        image.value = null;
-        video.value = null;
-        
-        toast.success("Data add successfully", {
-        timeout: 2000
-      });
-      router.push({name: 'home'});
-    }
-} catch (error: any) {
-    if (error === 'Error: Invalid credentials') {
+        if (title.value && content.value && image.value && video.value) {
+            await articleStore.store(title.value, content.value, image.value, userId.id, video.value);
+            title.value = '';
+            content.value = '';
+            image.value = null;
+            video.value = null;
+
+            toast.success("Data add successfully", {
+                timeout: 2000
+            });
+            router.push({ name: 'home' });
+        }
+    } catch (error: any) {
         console.log(error);
-    }
-    
-    if (error.response.status === 400) {
+
+        if (error) {
+            if (error.response.status === 400) {
+                isSave.value = false;
+                console.log(error.response.data.message.video.length);
+
+                if (error.response.data.message.image) {
+                    for (let i = 0; i < error.response.data.message.image.length; i++) {
+                        toast.error(error.response.data.message.image[i], {
+                            timeout: 3000
+                        });
+                    }
+                }
+
+                if (error.response.data.message.video) {
+                    for (let v = 0; v < error.response.data.message.video.length; v++) {
+                        toast.error(error.response.data.message.video[v], {
+                            timeout: 3000
+                        });
+                    }
+                }
+
+            }
+        }
+        router.push({ name: 'article' });
+    } finally {
         isSave.value = false;
-        toast.error(error.response.data.message.image[0], {
-            timeout: 3000
-        });
     }
-    router.push({name: 'article'});
-    } 
 }
 
 </script>
@@ -100,21 +117,27 @@ const submit = async () => {
                             Image <span class="text-warning">*</span>
                         </label>
                         <input type="file" class="file-input file-input-bordered w-full max-w-xs" id="image"
-                            accept=".jpeg,.png,.jpg,.gif,.svg" @change="handleFileChange" required/>
+                            accept=".jpeg,.png,.jpg,.gif,.svg" @change="handleFileChange" required />
                     </div>
-                    
+
                     <div class="w-full px-3 mt-2">
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                             for="grid-password">
                             Video <span class="text-warning">*</span>
                         </label>
                         <input type="file" class="file-input file-input-bordered w-full max-w-xs" id="video"
-                            accept="video/mp4,video/x-m4v" @change="handleVideoChange" required/>
+                            accept="video/mp4,video/x-m4v" @change="handleVideoChange" required />
                     </div>
-                        <span class="text-sm ml-5 mt-1">Format Video : mp4</span>
+                    <div class="w-full px-3 mt-1">
+                        <span class="text-sm ">Format Video : mp4</span>
+                    </div>
+                    <div class="w-full px-3 mt-1">
+                        <span class="text-sm">File Size : 20Mb</span>
+                    </div>
                 </div>
 
                 <ButtonVue type="submit" :disabled="isSave">Save</ButtonVue>
             </div>
         </form>
-</div></template>
+    </div>
+</template>
