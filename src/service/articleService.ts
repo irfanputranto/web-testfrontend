@@ -24,12 +24,28 @@ export const articleService = {
             throw new Error('Error : ' + err);
         }
     },
-    async store(title: string, content: string, image: File, userId: string): Promise<void> {
+    async show(id: any): Promise<void> {
+        try {
+            const res = await axios.get(`${BASE_URL}/api/article/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+
+            const data = res.data;
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    },
+    async store(title: string, content: string, image: File, userId: string, video: File): Promise<void> {
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
         formData.append('image', image);
         formData.append('user_id', userId);
+        formData.append('video', video);
 
         try {
             await axios.post(`${BASE_URL}/api/article`, formData, {

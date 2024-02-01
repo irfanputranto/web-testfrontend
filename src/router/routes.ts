@@ -1,16 +1,16 @@
 import { RouteRecordRaw } from "vue-router";
 import AboutVue from "../views/About.vue";
-import Details from "../views/Details.vue";
 import ArticleVue from "../views/Article/Article.vue";
 import { authMiddleware } from "../middleware/authMiddleware";
 import LoginVue from "../views/Login.vue";
 import HomeVue from "../views/Home.vue";
+import DetailsVideoVue from "../views/DetailsVideo.vue";
 
 const routes: RouteRecordRaw[] = [
     { path: '/', name: 'home', component: HomeVue },
     {
         path: '/details/:id',
-        component: Details,
+        component: DetailsVideoVue,
         name: 'details',
         props: true
     },

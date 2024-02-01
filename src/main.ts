@@ -11,6 +11,7 @@ import { useAuthStore } from './store/auth';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
+
 library.add(faSearch);
 
 const pinia = createPinia();
@@ -23,7 +24,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 })
-app.use(router)
+app.use(router);
 app.use(Toast);
 app.mount('#app')
 

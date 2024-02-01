@@ -120,6 +120,7 @@ onMounted(() => {
                         :alt="article.alias"
                         :description="article.content"
                         :image="article.image"
+                        :link-name="'details'"
                         :link-params="{ id: article.id }" class="mt-5 mr-5 sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/4 lg:mr-5" />
                 </div>
 

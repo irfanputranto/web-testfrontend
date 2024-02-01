@@ -9,6 +9,7 @@ import { useToast } from "vue-toastification";
 const title = ref('');
 const content = ref('');
 const image = ref<File | null>(null);
+const video = ref<File | null>(null);
 const toast = useToast();
 
 const articleStore = useArticleStore();
@@ -24,17 +25,28 @@ const handleFileChange = (event: Event) => {
     }
 };
 
+const handleVideoChange = (event: Event) => {
+    const input = event.target as  HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+        video.value = input.files[0];
+    }
+}
+
+
 const submit = async () => {
     isSave.value = true;
     try {
         await userStore.checkUser();
         const userId = userStore.userData;
 
-    if (title.value && content.value && image.value) {
-       await articleStore.store(title.value, content.value, image.value, userId.id);
+    if (title.value && content.value && image.value && video.value) {
+       await articleStore.store(title.value, content.value, image.value, userId.id, video.value);
         title.value = '';
         content.value = '';
         image.value = null;
+        video.value = null;
+        
         toast.success("Data add successfully", {
         timeout: 2000
       });
@@ -90,6 +102,16 @@ const submit = async () => {
                         <input type="file" class="file-input file-input-bordered w-full max-w-xs" id="image"
                             accept=".jpeg,.png,.jpg,.gif,.svg" @change="handleFileChange" required/>
                     </div>
+                    
+                    <div class="w-full px-3 mt-2">
+                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                            for="grid-password">
+                            Video <span class="text-warning">*</span>
+                        </label>
+                        <input type="file" class="file-input file-input-bordered w-full max-w-xs" id="video"
+                            accept="video/mp4,video/x-m4v" @change="handleVideoChange" required/>
+                    </div>
+                        <span class="text-sm ml-5 mt-1">Format Video : mp4</span>
                 </div>
 
                 <ButtonVue type="submit" :disabled="isSave">Save</ButtonVue>

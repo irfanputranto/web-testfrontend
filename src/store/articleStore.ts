@@ -10,6 +10,7 @@ interface DataState {
     currentPage: number;
     limit: number;
     isLoading: boolean;
+    dataFirst: any;
     error: Error | null;
 }
 
@@ -23,6 +24,7 @@ export const useArticleStore = defineStore({
         currentPage: 1,
         limit: 9,
         isLoading: false,
+        dataFirst: null,
         error: null,
     }),
     actions: {
@@ -37,10 +39,21 @@ export const useArticleStore = defineStore({
                 this.isLoading = false;
             }
         },
-        async store(title: string, content: string, image: File, userId: string): Promise<void> {
+        async show(id: any): Promise<void> {
             this.isLoading = true;
             try {
-                await articleService.store(title, content, image, userId);
+                const res = await articleService.show(id);
+                this.dataFirst = res;
+            } catch (error) {
+                throw error;
+            } finally {
+                this.isLoading = false;
+            }
+        },
+        async store(title: string, content: string, image: File, userId: string, video: File): Promise<void> {
+            this.isLoading = true;
+            try {
+                await articleService.store(title, content, image, userId, video);
             } catch (err) {
                 throw err;
             } finally {
